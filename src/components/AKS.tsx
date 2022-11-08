@@ -72,7 +72,7 @@ const AKS: React.FC<{
   };
   return (
     <>
-      <Typography variant="h2">Azure Kubernetes System</Typography>
+      <Typography variant="h2">Azure Kubernetes Service</Typography>
       <div className="AKSBoard" ref={drop}>
         {props.pods.map((pod: any, index: number) => {
           return (
