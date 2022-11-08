@@ -13,12 +13,14 @@ const AKS: React.FC<{
   handleMigratingPodChange: (
     name: string,
     region: string,
-    namespace: string
+    namespace: string,
+    status: string
   ) => void;
   migratingPod: {
     name: string;
     region: string;
     namespace: string;
+    status: string
   };
 }> = (props) => {
   const [{ isOver }, drop] = useDrop(() => ({
@@ -45,8 +47,9 @@ const AKS: React.FC<{
         }
       })
       .then(function (r) {
+        alert(r.data)
         props.setActivate(props.activate + 1);
-        props.handleMigratingPodChange("", "left", "");
+        props.handleMigratingPodChange(name, "right", namespace, 'deleting...');
       });
   };
 
@@ -56,7 +59,7 @@ const AKS: React.FC<{
         "Do you want to migrate " + name + "?"
       );
       if (answer) {
-        props.handleMigratingPodChange(name, "right", namespace);
+        props.handleMigratingPodChange(name, "right", namespace, 'migrating...');
         handleTransfer(name, namespace);
         // console.log("aks2gke");
         // const pictureList = PictureList.filter((picture) => id === picture.id);
@@ -69,7 +72,7 @@ const AKS: React.FC<{
   };
   return (
     <>
-      <Typography variant="h1">Azure Kubernetes System</Typography>
+      <Typography variant="h2">Azure Kubernetes System</Typography>
       <div className="AKSBoard" ref={drop}>
         {props.pods.map((pod: any, index: number) => {
           return (

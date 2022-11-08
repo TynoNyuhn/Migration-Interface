@@ -25,7 +25,7 @@ img {
 .AKSBoard {
   float: left;
   width: 48vw;
-  height: 83vh;
+  height: 80vh;
   border: 2px solid black;
   overflow:auto;
 }
@@ -34,7 +34,7 @@ img {
 .GKEBoard {
   float: right;
   width: 48vw;
-  height: 83vh;
+  height: 80vh;
   border: 2px solid black;
   overflow:auto;
 }

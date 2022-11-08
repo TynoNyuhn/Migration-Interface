@@ -13,12 +13,14 @@ const GKE: React.FC<{
   handleMigratingPodChange: (
     name: string,
     region: string,
-    namespace: string
+    namespace: string,
+    status: string
   ) => void;
   migratingPod: {
     name: string;
     region: string;
     namespace: string;
+    status: string;
   };
 }> = (props) => {
   const [{ isOver }, drop] = useDrop(() => ({
@@ -35,18 +37,19 @@ const GKE: React.FC<{
   const handleTransfer = (name: string, namespace: string) => {
     console.log("AKS pod migrating to GKE")
     axios
-      .post("http://20.121.139.124:30001/migrate", {
-        name: "memhog",
-        namespace: "default",
-        destinationUrl: "34.171.128.48:30001",
+      .post("http://" + (process.env.REACT_APP_AKS_IP as string) + ":30001/migrate", {
+        name: name,
+        namespace: namespace,
+        destinationUrl: (process.env.REACT_APP_GKE_IP as string) + ":30001",
       }, {
         headers: {
           "Content-Type": "application/json"
         }
       })
       .then(function (r) {
+        alert(r.data)
         props.setActivate(props.activate + 1);
-        props.handleMigratingPodChange("", "right", "");
+        props.handleMigratingPodChange(name, "left", namespace, "deleting...");
       });
   };
 
@@ -56,7 +59,7 @@ const GKE: React.FC<{
         "Do you want to migrate " + name + "?"
       );
       if (answer) {
-        props.handleMigratingPodChange(name, "left", namespace);
+        props.handleMigratingPodChange(name, "left", namespace, 'migrating...');
         handleTransfer(name, namespace);
         // console.log("aks2gke");
         // const pictureList = PictureList.filter((picture) => id === picture.id);
@@ -69,7 +72,7 @@ const GKE: React.FC<{
   };
   return (
     <>
-      <Typography variant="h1">Google Kubernetes Engine</Typography>
+      <Typography variant="h2">Google Kubernetes Engine</Typography>
       <div className="GKEBoard" ref={drop}>
         {props.pods.map((pod: any, index: number) => {
           return (

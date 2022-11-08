@@ -20,18 +20,21 @@ function App() {
     name: "",
     region: "",
     namespace: "",
+    status: "",
   });
 
   const handleMigratingPodChange = (
     name: string,
     region: string,
-    namespace: string
+    namespace: string,
+    status: string,
   ) => {
     //console.log(migratingPod)
     setMigratingPod({
       name: name,
       region: region,
       namespace: namespace,
+      status: status,
     })
     //console.log(migratingPod);
   };

@@ -17,6 +17,7 @@ const Item: React.FC<{
     name: string;
     region: string;
     namespace: string;
+    status: string;
   };
   region: string;
 }> = (props) => {
@@ -64,7 +65,7 @@ const Item: React.FC<{
                   variant="h6"
                   component="div"
                 >
-                  migrating...
+                  {props.migratingPod.status}
                 </Typography>
               )}
           </CardContent>
