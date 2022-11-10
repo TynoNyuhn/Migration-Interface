@@ -4,6 +4,7 @@ import "../App.css";
 import axios from "axios";
 import { Typography } from "@mui/material";
 import Item from "./Item";
+import { setEmitFlags } from "typescript";
 
 const GKE: React.FC<{
   pods: any;
@@ -35,31 +36,64 @@ const GKE: React.FC<{
 
   // Transfer AKS pod to GKE
   const handleTransfer = (name: string, namespace: string) => {
-    console.log("AKS pod migrating to GKE")
-    axios
-      .post("http://" + (process.env.REACT_APP_AKS_IP as string) + ":30001/migrate", {
-        name: name,
-        namespace: namespace,
-        destinationUrl: (process.env.REACT_APP_GKE_IP as string) + ":30001",
-      }, {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-      .then(function (r) {
-        alert(r.data)
-        props.setActivate(props.activate + 1);
-        props.handleMigratingPodChange(name, "left", namespace, "deleting...");
-      });
+    var postMsg = {
+      name: name,
+      namespace: namespace,
+      destinationUrl: (process.env.REACT_APP_GKE_IP as string) + ":30001",
+    };
+    console.log("AKS pod migrating to GKE");
+
+    var sse = new EventSource(
+      "http://" +
+        (process.env.REACT_APP_AKS_IP as string) +
+        ":30001/demo?name=" +
+        name +
+        "&namespace=" +
+        namespace +
+        "&destinationUrl=" +
+        (process.env.REACT_APP_GKE_IP as string) +
+        ":30001&keep=true&redirect=" +
+        (process.env.REACT_APP_GKE_IP as string) + ":30080"
+    );
+    sse.addEventListener("message", function (e) {
+      console.log(e);
+      var data = e.data;
+      if (!data) {
+        console.log("No data in event");
+        return;
+      }
+      if (data === "DONE") {
+        console.log("done!");
+        sse.close();
+      }
+    });
+
+    // axios
+    //   .post(
+    //     "http://" + (process.env.REACT_APP_AKS_IP as string) + ":30001/migrate",
+    //     {
+    //       name: name,
+    //       namespace: namespace,
+    //       destinationUrl: (process.env.REACT_APP_GKE_IP as string) + ":30001",
+    //     },
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //     }
+    //   )
+    //   .then(function (r) {
+    //     alert(r.data);
+    //     props.setActivate(props.activate + 1);
+    //     props.handleMigratingPodChange(name, "left", namespace, "deleting...");
+    //   });
   };
 
   const addImageToBoard = (id: number, namespace: string, name: string) => {
     if (namespace !== "gke") {
-      var answer = window.confirm(
-        "Do you want to migrate " + name + "?"
-      );
+      var answer = window.confirm("Do you want to migrate " + name + "?");
       if (answer) {
-        props.handleMigratingPodChange(name, "left", namespace, 'migrating...');
+        props.handleMigratingPodChange(name, "left", namespace, "migrating...");
         handleTransfer(name, namespace);
         // console.log("aks2gke");
         // const pictureList = PictureList.filter((picture) => id === picture.id);
@@ -72,7 +106,19 @@ const GKE: React.FC<{
   };
   return (
     <>
-      <Typography variant="h2">Google Kubernetes Engine</Typography>
+      <Typography variant="h2">
+        <img
+          height="50"
+          width="50"
+          src="https://lh3.googleusercontent.com/Aane0AssTO_QZK7MZ3yV89oPg95K5LgJ7Keang1B9Vi1DEMWG4vTUqBewXM3ibwZdEO0IW1NnumogaGOZVwf=w160-h160"
+        ></img>
+        Google Kubernetes Engine
+        <img
+          height="50"
+          width="50"
+          src="https://lh3.googleusercontent.com/Aane0AssTO_QZK7MZ3yV89oPg95K5LgJ7Keang1B9Vi1DEMWG4vTUqBewXM3ibwZdEO0IW1NnumogaGOZVwf=w160-h160"
+        ></img>
+      </Typography>
       <div className="GKEBoard" ref={drop}>
         {props.pods.map((pod: any, index: number) => {
           return (
@@ -80,6 +126,8 @@ const GKE: React.FC<{
               region="right"
               migratingPod={props.migratingPod}
               name={pod.name}
+              status={pod.status}
+              migratable={pod.migratable}
               url={""}
               id={index}
               namespace={pod.namespace}

@@ -20,7 +20,7 @@ const AKS: React.FC<{
     name: string;
     region: string;
     namespace: string;
-    status: string
+    status: string;
   };
 }> = (props) => {
   const [{ isOver }, drop] = useDrop(() => ({
@@ -35,31 +35,38 @@ const AKS: React.FC<{
 
   // Transfer GKE pod to AKS
   const handleTransfer = (name: string, namespace: string) => {
-    console.log("GKE pod to AKS")
+    console.log("GKE pod to AKS");
     axios
-      .post("http://" + (process.env.REACT_APP_GKE_IP as string) + ":30001/migrate", {
-        name: name,
-        namespace: namespace,
-        destinationUrl: (process.env.REACT_APP_AKS_IP as string) + ":30001",
-      }, {
-        headers: {
-          "Content-Type": "application/json"
+      .post(
+        "http://" + (process.env.REACT_APP_GKE_IP as string) + ":30001/migrate",
+        {
+          name: name,
+          namespace: namespace,
+          destinationUrl: (process.env.REACT_APP_AKS_IP as string) + ":30001",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      })
+      )
       .then(function (r) {
-        alert(r.data)
+        alert(r.data);
         props.setActivate(props.activate + 1);
-        props.handleMigratingPodChange(name, "right", namespace, 'deleting...');
+        props.handleMigratingPodChange(name, "right", namespace, "deleting...");
       });
   };
 
   const addImageToBoard = (id: number, namespace: string, name: string) => {
     if (namespace !== "aks") {
-      var answer = window.confirm(
-        "Do you want to migrate " + name + "?"
-      );
+      var answer = window.confirm("Do you want to migrate " + name + "?");
       if (answer) {
-        props.handleMigratingPodChange(name, "right", namespace, 'migrating...');
+        props.handleMigratingPodChange(
+          name,
+          "right",
+          namespace,
+          "migrating..."
+        );
         handleTransfer(name, namespace);
         // console.log("aks2gke");
         // const pictureList = PictureList.filter((picture) => id === picture.id);
@@ -72,7 +79,19 @@ const AKS: React.FC<{
   };
   return (
     <>
-      <Typography variant="h2">Azure Kubernetes Service</Typography>
+      <Typography variant="h2">
+        <img
+          height="50"
+          width="50"
+          src="https://boxboat.com/2019/10/01/quick-intro-to-aks/featured.svg"
+        ></img>
+        Azure Kubernetes Service
+        <img
+          height="50"
+          width="50"
+          src="https://boxboat.com/2019/10/01/quick-intro-to-aks/featured.svg"
+        ></img>
+      </Typography>
       <div className="AKSBoard" ref={drop}>
         {props.pods.map((pod: any, index: number) => {
           return (
@@ -80,6 +99,8 @@ const AKS: React.FC<{
               region="left"
               migratingPod={props.migratingPod}
               name={pod.name}
+              status={pod.status}
+              migratable={pod.migratable}
               url={""}
               id={index}
               namespace={pod.namespace}

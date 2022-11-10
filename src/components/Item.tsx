@@ -13,6 +13,8 @@ const Item: React.FC<{
   namespace: string;
   name: string;
   url: string;
+  status: string;
+  migratable: string;
   migratingPod: {
     name: string;
     region: string;
@@ -33,22 +35,37 @@ const Item: React.FC<{
       <Card
         sx={{
           //backgroundColor: "#D3D3D3",
-          borderColor: "white",
+          //width: "48vw",
+          borderRadius: "0",
+          borderColor: props.migratable === "True" ? "white": "black",
+          backgroundColor: props.migratable === "True" ? "white": "gray",
           display: "flex",
-          mb: 2,
-          borderBottom: "1px solid gray"
+          //mb: 2,
+          borderBottom: "1px solid gray",
         }}
         variant="outlined"
       >
         <img
-          ref={drag}
+          ref={props.migratable === "True" ? drag : null}
           src="https://t4.ftcdn.net/jpg/03/20/69/73/240_F_320697394_ePxphXpLXtSwIcdaKG88iV0l1rf0Pbat.jpg"
           height="70px"
-          style={{ border: isDragging ? "5px solid blue" : ((props.region === "left") ? "2px solid gray" : "4px solid black"), borderRadius: 5 }}
+          style={{
+            border: isDragging
+              ? "5px solid blue"
+              : props.region === "left"
+              ? "2px solid gray"
+              : "4px solid black",
+            borderRadius: 5,
+          }}
         />
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <Box
+          sx={{
+            width: "47vw",
+            //display: "flex", flexDirection: "column"
+          }}
+        >
           <CardContent sx={{ flex: "1 0 auto" }}>
-            <Typography component="div" variant="h5">
+            <Typography component="div" variant="h5" sx={{ textAlign: "left" }}>
               {props.name}
             </Typography>
             <Typography
@@ -59,15 +76,28 @@ const Item: React.FC<{
             >
               {props.namespace}
             </Typography>
-            {props.name === props.migratingPod.name &&
-              props.namespace === props.migratingPod.namespace && props.migratingPod.region === props.region && (
-                <Typography
-                  variant="h6"
-                  component="div"
-                >
-                  {props.migratingPod.status}
-                </Typography>
-              )}
+            <Typography
+              variant="subtitle1"
+              color="text.secondary"
+              component="div"
+              sx={{ textAlign: "center" }}
+            >
+              {props.status}
+            </Typography>
+            {
+            // props.name === props.migratingPod.name &&
+            //   props.namespace === props.migratingPod.namespace &&
+            //   props.migratingPod.region === props.region && (
+            //     <Typography
+            //       variant="subtitle1"
+            //       color="text.secondary"
+            //       //component="div"
+            //       sx={{ float: "right" }}
+            //     >
+            //       {props.migratingPod.status}
+            //     </Typography>
+            //   )
+              }
           </CardContent>
           <Box
             sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }}

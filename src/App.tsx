@@ -23,6 +23,10 @@ function App() {
     status: "",
   });
 
+  function delay(milliseconds: number) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
+
   const handleMigratingPodChange = (
     name: string,
     region: string,
@@ -51,9 +55,15 @@ function App() {
     });
   };
 
+  const timerActivate = async () => {
+    await delay(1000)
+    setActivate(activate + 1)
+  }
+
   useEffect(() => {
     getPods(setLeftPods, (process.env.REACT_APP_AKS_IP as string), setHasLeft);
     getPods(setRightPods, (process.env.REACT_APP_GKE_IP as string), setHasRight);
+    timerActivate()
   }, [activate]);
 
   return (
@@ -65,6 +75,7 @@ function App() {
           onClick={() => {
             setActivate(activate + 1);
           }}
+          sx={{borderRadius: "0"}}
         >
           Refresh Pods
         </Button>
