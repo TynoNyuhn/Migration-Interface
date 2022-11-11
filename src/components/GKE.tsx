@@ -27,7 +27,7 @@ const GKE: React.FC<{
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "image",
     drop: (item: any) => {
-      addImageToBoard(item.id, item.namespace, item.name);
+      addImageToBoard(item.id, item.namespace, item.name, item.region);
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
@@ -36,11 +36,6 @@ const GKE: React.FC<{
 
   // Transfer AKS pod to GKE
   const handleTransfer = (name: string, namespace: string) => {
-    var postMsg = {
-      name: name,
-      namespace: namespace,
-      destinationUrl: (process.env.REACT_APP_GKE_IP as string) + ":30001",
-    };
     console.log("AKS pod migrating to GKE");
 
     var sse = new EventSource(
@@ -63,6 +58,7 @@ const GKE: React.FC<{
         return;
       }
       if (data === "DONE") {
+        alert("Migration Complete!")
         console.log("done!");
         sse.close();
       }
@@ -89,9 +85,9 @@ const GKE: React.FC<{
     //   });
   };
 
-  const addImageToBoard = (id: number, namespace: string, name: string) => {
-    if (namespace !== "gke") {
-      var answer = window.confirm("Do you want to migrate " + name + "?");
+  const addImageToBoard = (id: number, namespace: string, name: string, region: string) => {
+    if (region !== "right") {
+      var answer = window.confirm("Do you want to migrate the " + name + " pod to GKE?");
       if (answer) {
         props.handleMigratingPodChange(name, "left", namespace, "migrating...");
         handleTransfer(name, namespace);

@@ -25,7 +25,7 @@ const Item: React.FC<{
 }> = (props) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "image",
-    item: { id: props.id, namespace: props.namespace, name: props.name },
+    item: { id: props.id, namespace: props.namespace, name: props.name, region: props.region },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),

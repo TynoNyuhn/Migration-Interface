@@ -26,7 +26,7 @@ const AKS: React.FC<{
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "image",
     drop: (item: any) => {
-      addImageToBoard(item.id, item.namespace, item.name);
+      addImageToBoard(item.id, item.namespace, item.name, item.region);
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
@@ -57,9 +57,9 @@ const AKS: React.FC<{
       });
   };
 
-  const addImageToBoard = (id: number, namespace: string, name: string) => {
-    if (namespace !== "aks") {
-      var answer = window.confirm("Do you want to migrate " + name + "?");
+  const addImageToBoard = (id: number, namespace: string, name: string, region: string) => {
+    if (region !== "left") {
+      var answer = window.confirm("Do you want to migrate the " + name + " pod to AKS?");
       if (answer) {
         props.handleMigratingPodChange(
           name,
