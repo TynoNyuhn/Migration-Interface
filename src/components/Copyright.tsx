@@ -29,6 +29,18 @@ const Copyright: React.FC<{}> = (props) => {
         2022
         {"."}
       </Typography>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        align="center"
+      >
+        <img width="100px" height="75px" src="https://hpcclab.org/wp-content/uploads/2016/04/logo-600x382.jpg">
+        </img>
+        <img width="75px" height="75px" src="https://www.nsf.gov/policies/images/NSF_Official_logo_High_Res_1200ppi.png">
+        </img>
+        <img width="175px" height="75px" src="https://web.louisiana.edu/sites/web/files/Screen%20Shot%202017-08-31%20at%203.53.43%20PM.png">
+        </img>
+      </Typography>
     </>
   );
 };
