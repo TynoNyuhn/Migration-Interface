@@ -4,8 +4,8 @@ services:
     build:
       context: .
       args:
-        REACT_APP_AKS_IP: ${REACT_APP_AKS_IP}
-        REACT_APP_GKE_IP: ${REACT_APP_GKE_IP}
+        REACT_APP_AKS_IP: "$REACT_APP_AKS_IP"
+        REACT_APP_GKE_IP: "$REACT_APP_GKE_IP"
     # environment:
     #   "REACT_APP_AKS_IP": "20.121.139.124"
     #   "REACT_APP_GKE_IP": "34.173.162.99"
