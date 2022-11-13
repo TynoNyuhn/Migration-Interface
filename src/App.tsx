@@ -61,12 +61,12 @@ function App() {
   }
 
   useEffect(() => {
-    if (activate === 1) {
-      console.log(process.env)
-      console.log((process.env['REACT_APP_AKS_IP'] as string) + "\n" + (process.env['REACT_APP_GKE_IP'] as string))
-    }
-    getPods(setLeftPods, (process.env['REACT_APP_AKS_IP'] as string), setHasLeft);
-    getPods(setRightPods, (process.env['REACT_APP_GKE_IP'] as string), setHasRight);
+    // if (activate === 1) {
+    //   console.log(process.env)
+    //   console.log((process.env['REACT_APP_AKS_IP'] as string) + "\n" + (process.env['REACT_APP_GKE_IP'] as string))
+    // }
+    getPods(setLeftPods, "20.121.139.124", setHasLeft);
+    getPods(setRightPods, "34.171.128.48", setHasRight);
     timerActivate()
   }, [activate]);
 

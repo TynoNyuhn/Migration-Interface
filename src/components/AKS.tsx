@@ -38,11 +38,11 @@ const AKS: React.FC<{
     console.log("GKE pod to AKS");
     axios
       .post(
-        "http://" + (process.env['REACT_APP_GKE_IP'] as string) + ":30001/migrate",
+        "http://" + "34.171.128.48" + ":30001/migrate",
         {
           name: name,
           namespace: namespace,
-          destinationUrl: (process.env['REACT_APP_AKS_IP'] as string) + ":30001",
+          destinationUrl: "20.121.139.124" + ":30001",
         },
         {
           headers: {

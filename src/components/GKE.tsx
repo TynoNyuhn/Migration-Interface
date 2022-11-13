@@ -40,15 +40,15 @@ const GKE: React.FC<{
 
     var sse = new EventSource(
       "http://" +
-        (process.env['REACT_APP_AKS_IP'] as string) +
+        "20.121.139.124" +
         ":30001/demo?name=" +
         name +
         "&namespace=" +
         namespace +
         "&destinationUrl=" +
-        (process.env['REACT_APP_GKE_IP'] as string) +
+        "34.171.128.48" +
         ":30001&keep=true&redirect=" +
-        (process.env['REACT_APP_GKE_IP'] as string) + ":30080"
+        "34.171.128.48" + ":30080"
     );
     sse.addEventListener("message", function (e) {
       console.log(e);
